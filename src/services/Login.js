@@ -53,6 +53,7 @@ const Login = () => {
   };
   const handleFormSubmit = (event) => {
     event.preventDefault();
+
     if (loginDetails.email.trim() == "" || loginDetails.password.trim() == "") {
       console.log("user name and password required!!");
       toast.error("user name and password required!!");
@@ -65,20 +66,31 @@ const Login = () => {
         if (token && user) {
           console.log("User login successful!");
           doLogin(user, () => {
-            console.log(token);
-            console.log(user);
-            console.log("saved to localstorage");
-            navigate("/user/dashboard");
+            if (user.email == "admin@gmail") {
+              navigate("/user/tenders");
+              return;
+            } else {
+              console.log("saved to localstorage");
+              navigate("/user/dashboard");
+            }
           });
           toast.success("User login successful!");
         } else if (response?.data?.error === "Invalid credentials") {
           console.log("Login error:", response.data.error);
+          if (
+            loginDetails.email.trim() !== "" ||
+            loginDetails.password.trim() !== ""
+          ) {
+            toast.error("Invalid credentials");
+          }
         } else {
           console.log("Unexpected response format");
+          toast.error("Please Enter Valid Response");
         }
       })
       .catch((error) => {
         console.log(error);
+        console.log("Error:", error);
         if (error.response.status == 400) {
           console.log(error.response.data.messege);
         }

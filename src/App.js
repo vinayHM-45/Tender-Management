@@ -1,5 +1,6 @@
 import React from "react";
 import "./App.css";
+import AdminPage from "./components/admin";
 import ListTenderDetails from "./components/ListTenderDetails";
 import { ToastContainer } from "react-toastify";
 import SignUp from "./services/SignUp";
@@ -24,6 +25,7 @@ function App() {
         <Route path="/user" exact element={<PrivateUser />}>
           <Route path="dashboard" exact element={<UserDashBoard />} />
           <Route path="tender" exact element={<ListTenderDetails />} />
+          <Route path="tenders" exact element={<AdminPage />} />
           <Route path="appliedtenders" exact element={<TenderApply />} />
         </Route>
       </Routes>

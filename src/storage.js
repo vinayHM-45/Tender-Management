@@ -24,3 +24,7 @@ export const getCurrentUserDetail = () => {
     return undefined;
   }
 };
+export const isAdmin = () => {
+  const currentUser = getCurrentUserDetail();
+  return currentUser?.user === "admin@gmail";
+};

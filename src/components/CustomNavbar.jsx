@@ -16,7 +16,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 
-function CustomNavbar(args) {
+function CustomNavbar({ isAdmin }) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
@@ -42,7 +42,7 @@ function CustomNavbar(args) {
   return (
     <div>
       <Navbar color="dark" dark expand="md" fixed="">
-        <NavbarBrand href="/">Tender Managment</NavbarBrand>
+        <NavbarBrand href="/">Tender Management</NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
@@ -70,11 +70,20 @@ function CustomNavbar(args) {
           <Nav navbar>
             {login && (
               <>
-                <NavItem>
-                  <NavLink tag={ReactLink} to="/user/tender">
-                    Apply tenders
-                  </NavLink>
-                </NavItem>
+                {!isAdmin && (
+                  <NavItem>
+                    <NavLink tag={ReactLink} to="/user/tender">
+                      Apply tenders
+                    </NavLink>
+                  </NavItem>
+                )}
+                {isAdmin && (
+                  <NavItem>
+                    <NavLink tag={ReactLink} to="/user/tenders">
+                      ADD TENDERS
+                    </NavLink>
+                  </NavItem>
+                )}
                 <NavItem>
                   <NavLink>{user.email}</NavLink>
                 </NavItem>

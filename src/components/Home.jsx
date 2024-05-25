@@ -4,11 +4,19 @@ import "../style.css";
 import CustomNavbar from "./CustomNavbar";
 import Footer from "./Footer";
 import "../footer.css";
+import { useRef } from "react";
 
 function Home() {
+  const sectionRef = useRef(null);
+
+  const scrollToSection = () => {
+    if (sectionRef.current) {
+      sectionRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <>
-      <CustomNavbar />
+      <CustomNavbar scrollToSection={scrollToSection} />
       <div className="container2" id="RESUME">
         <header>
           <div className="header-text-box">
@@ -29,7 +37,7 @@ function Home() {
           <img className="imagef" src={HomeImage} alt="Photo" />
         </header>
 
-        <section>
+        <section ref={sectionRef} id="RESUME">
           <h2>Why Choose Our Website</h2>
           <div className="grid-3-cols">
             <div>

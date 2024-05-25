@@ -1,8 +1,9 @@
 import axios from "axios";
-const TENDERS_API_BASE_URL = "http://localhost:8080/api/v1/tender";
-const TENDERS2_API_BASE_URL = "http://localhost:8080/api/v1/signup";
-const TENDERS3_API_BASE_URL = "http://localhost:8080/api/v1/login";
-const TENDERS4_API_BASE_URL = "http://localhost:8080/api/v1/appliedtenders";
+const TENDERS_API_BASE_URL = "https://tender-ic6h.onrender.com/api/v1/tender";
+const TENDERS2_API_BASE_URL = "https://tender-ic6h.onrender.com/api/v1/signup";
+const TENDERS3_API_BASE_URL = "https://tender-ic6h.onrender.com/api/v1/login";
+const TENDERS4_API_BASE_URL =
+  "https://tender-ic6h.onrender.com/api/v1/appliedtenders";
 class TenderService {
   getTenders() {
     return axios.get(TENDERS_API_BASE_URL);
@@ -30,6 +31,13 @@ class TenderService {
   }
   getTendersApplied() {
     return axios.get(TENDERS4_API_BASE_URL);
+  }
+  postTendersCreate(tenders) {
+    return axios.post(TENDERS_API_BASE_URL, tenders, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   }
 }
 

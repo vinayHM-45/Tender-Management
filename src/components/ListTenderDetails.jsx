@@ -49,23 +49,23 @@ class ListTenderDetails extends Component {
                   <th>
                     <FontAwesomeIcon icon={faMoneyBillAlt} /> Tender Amount
                   </th>
-                  <th>Tender Eligibility</th>
+                  <th>Tender Expires By</th>
                   <th>
                     <FontAwesomeIcon icon={faUserCheck} /> Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {this.state.tenders.map((tender, index) => (
+                {this.state.tenders.map((tender) => (
                   <tr
                     key={tender.id}
-                    className={index % 2 === 0 ? "even-row" : "odd-row"}
+                    className={tender.id % 2 === 0 ? "even-row" : "odd-row"}
                   >
                     <td>{tender.id}</td>
                     <td>{tender.name}</td>
                     <td>{tender.details}</td>
                     <td>{tender.amount}</td>
-                    <td>{tender.eligibility}</td>
+                    <td>{tender.endsOn}</td>
                     <td>
                       <Link
                         to="/user/appliedtenders"

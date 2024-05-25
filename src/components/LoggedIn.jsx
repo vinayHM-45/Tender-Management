@@ -1,5 +1,14 @@
 import "../loggedin.css";
 import tender from "../assets/tender.jpg";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 import React, { Component } from "react";
 import TenderService from "../services/TenderService";
 import { getCurrentUserDetail } from "../storage";
@@ -31,12 +40,10 @@ class LoggedIn extends Component {
           (tender) => tender.email === email
         );
 
-        // Calculate total amount
         const totalAmount = tendersForUser.reduce(
           (total, tender) => total + tender.amount,
           0
         );
-
         this.setState({ tenders: tendersForUser, totalAmount });
       });
     } else {
@@ -90,7 +97,7 @@ class LoggedIn extends Component {
                   <td>{tender.id}</td>
                   <td>{tender.details}</td>
                   <td>{tender.amount}</td>
-                  <td>APPLIED</td>
+                  <td>{tender.status}</td>
                 </tr>
               ))}
             </tbody>
@@ -100,6 +107,16 @@ class LoggedIn extends Component {
           <div className="text-center" style={totalAmountStyle}>
             <h4 class="total">Total Amount: {this.state.totalAmount}</h4>
           </div>
+        </div>
+        <div className="row">
+          <LineChart width={600} height={300} data={this.state.tenders}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="id" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="amount" stroke="#8884d8" />
+          </LineChart>
         </div>
       </div>
     );
