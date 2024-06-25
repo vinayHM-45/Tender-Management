@@ -68,7 +68,7 @@ class ListTenderDetails extends Component {
                     <td>{tender.endsOn}</td>
                     <td>
                       <Link
-                        to="/user/appliedtenders"
+                        to={`/user/appliedtenders/${tender.id}`}
                         className="btn btn-primary"
                       >
                         <FontAwesomeIcon icon={faUserCheck} /> APPLY

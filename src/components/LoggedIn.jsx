@@ -31,13 +31,13 @@ class LoggedIn extends Component {
     const loggedInUser = getCurrentUserDetail();
 
     if (loggedInUser) {
-      const email = loggedInUser.email;
+      const userId = loggedInUser.id; // Assuming the user object has an 'id' field
 
       TenderService.getTendersApplied().then((res) => {
         const allTenders = res.data;
 
         const tendersForUser = allTenders.filter(
-          (tender) => tender.email === email
+          (tender) => tender.userId === userId
         );
 
         const totalAmount = tendersForUser.reduce(
@@ -94,7 +94,7 @@ class LoggedIn extends Component {
             <tbody>
               {this.state.tenders.map((tender) => (
                 <tr key={tender.id}>
-                  <td>{tender.id}</td>
+                  <td>{tender.tenderId}</td>
                   <td>{tender.details}</td>
                   <td>{tender.amount}</td>
                   <td>{tender.status}</td>

@@ -26,7 +26,11 @@ function App() {
           <Route path="dashboard" exact element={<UserDashBoard />} />
           <Route path="tender" exact element={<ListTenderDetails />} />
           <Route path="tenders" exact element={<AdminPage />} />
-          <Route path="appliedtenders" exact element={<TenderApply />} />
+          <Route
+            path="appliedtenders/:tenderId"
+            exact
+            element={<TenderApply />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>
