@@ -4,6 +4,7 @@ import "../style.css";
 import CustomNavbar from "./CustomNavbar";
 import Footer from "./Footer";
 import "../footer.css";
+import { Link } from "react-router-dom";
 import { useRef } from "react";
 
 function Home() {
