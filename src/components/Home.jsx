@@ -29,10 +29,9 @@ function Home() {
               corporation, or a small business, our platform streamlines the
               entire tender lifecycle.
             </p>
-
-            <a className="btn btn--big" href="/login" id="nextpage">
+            <Link to={`/login`} className="btn btn--big">
               Login
-            </a>
+            </Link>
           </div>
           <img className="imagef" src={HomeImage} alt="Photo" />
         </header>
