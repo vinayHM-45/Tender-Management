@@ -9,18 +9,33 @@ import {
   faFileAlt,
   faMoneyBillAlt,
   faUserCheck,
+  faTimes,
 } from "@fortawesome/free-solid-svg-icons";
+
 class ListTenderDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
       tenders: [],
     };
+    this.deleteTender = this.deleteTender.bind(this);
   }
+
   componentDidMount() {
     TenderService.getTenders().then((res) => {
       this.setState({ tenders: res.data });
     });
+  }
+
+  deleteTender(id) {
+    // Implement delete functionality here
+    // For example:
+    // TenderService.deleteTender(id).then((res) => {
+    //   this.setState({
+    //     tenders: this.state.tenders.filter((tender) => tender.id !== id),
+    //   });
+    // });
+    console.log(`Delete tender with id: ${id}`);
   }
 
   render() {
@@ -51,6 +66,9 @@ class ListTenderDetails extends Component {
                   </th>
                   <th>Tender Expires By</th>
                   <th>
+                    <FontAwesomeIcon icon={faUserCheck} /> STATUS
+                  </th>
+                  <th>
                     <FontAwesomeIcon icon={faUserCheck} /> Actions
                   </th>
                 </tr>
@@ -66,13 +84,20 @@ class ListTenderDetails extends Component {
                     <td>{tender.details}</td>
                     <td>{tender.amount}</td>
                     <td>{tender.endsOn}</td>
+                    <td>{tender.status}</td>
                     <td>
-                      <Link
-                        to={`/user/appliedtenders/${tender.id}`}
-                        className="btn btn-primary"
-                      >
-                        <FontAwesomeIcon icon={faUserCheck} /> APPLY
-                      </Link>
+                      {tender.status === "EXPIRED" ? (
+                        <button className="btn btn-secondary" disabled>
+                          <FontAwesomeIcon icon={faTimes} /> CLOSED
+                        </button>
+                      ) : (
+                        <Link
+                          to={`/user/appliedtenders/${tender.id}`}
+                          className="btn btn-primary"
+                        >
+                          <FontAwesomeIcon icon={faUserCheck} /> APPLY
+                        </Link>
+                      )}
                     </td>
                   </tr>
                 ))}

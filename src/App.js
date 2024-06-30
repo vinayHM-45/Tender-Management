@@ -9,7 +9,7 @@ import PrivateUser from "./components/PrivateUser";
 import UserDashBoard from "./components/UserDashBoard";
 import "react-toastify/dist/ReactToastify.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import UpdateTender from "./components/UpdateTender";
 import TenderApply from "./services/TenderApply";
 import Home from "./components/Home";
 
@@ -26,11 +26,13 @@ function App() {
           <Route path="dashboard" exact element={<UserDashBoard />} />
           <Route path="tender" exact element={<ListTenderDetails />} />
           <Route path="tenders" exact element={<AdminPage />} />
+
           <Route
             path="appliedtenders/:tenderId"
             exact
             element={<TenderApply />}
           />
+          <Route path="update-tender/:id" exact element={<UpdateTender />} />
         </Route>
       </Routes>
     </BrowserRouter>

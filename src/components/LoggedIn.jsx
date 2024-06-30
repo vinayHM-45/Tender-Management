@@ -1,4 +1,5 @@
-import "../loggedin.css";
+import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import tender from "../assets/tender.jpg";
 import {
   LineChart,
@@ -9,7 +10,6 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
-import React, { Component } from "react";
 import TenderService from "../services/TenderService";
 import { getCurrentUserDetail } from "../storage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,7 +17,10 @@ import {
   faClipboardList,
   faMoneyBillAlt,
   faCheckCircle,
+  faEdit,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
+
 class LoggedIn extends Component {
   constructor(props) {
     super(props);
@@ -31,15 +34,13 @@ class LoggedIn extends Component {
     const loggedInUser = getCurrentUserDetail();
 
     if (loggedInUser) {
-      const userId = loggedInUser.id; // Assuming the user object has an 'id' field
+      const userId = loggedInUser.id;
 
       TenderService.getTendersApplied().then((res) => {
         const allTenders = res.data;
-
         const tendersForUser = allTenders.filter(
           (tender) => tender.userId === userId
         );
-
         const totalAmount = tendersForUser.reduce(
           (total, tender) => total + tender.amount,
           0
@@ -51,6 +52,26 @@ class LoggedIn extends Component {
     }
   }
 
+  deleteTender = (id) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this tender? This action cannot be undone."
+    );
+
+    if (isConfirmed) {
+      TenderService.deleteAppliedTender(id)
+        .then((res) => {
+          this.setState({
+            tenders: this.state.tenders.filter((tender) => tender.id !== id),
+          });
+          window.alert("Tender deleted successfully.");
+        })
+        .catch((error) => {
+          console.error("Error deleting tender:", error);
+          window.alert("Error deleting tender. Please try again.");
+        });
+    }
+  };
+
   render() {
     const tableStyle = {
       width: "100%",
@@ -61,13 +82,12 @@ class LoggedIn extends Component {
       fontSize: "20px",
       fontWeight: "bold",
     };
+
     return (
       <div className="container">
-        <h1 className="text-center" class="dash">
-          YOUR DASHBOARD
-        </h1>
+        <h1 className="text-center dash">YOUR DASHBOARD</h1>
         <div className="text-center">
-          <img class="img" src={tender} alt="image" />
+          <img className="img" src={tender} alt="image" />
         </div>
         <h4 className="text-center">
           Look at what all tenders you have applied for
@@ -89,6 +109,7 @@ class LoggedIn extends Component {
                 <th>
                   <FontAwesomeIcon icon={faCheckCircle} /> Actions
                 </th>
+                <th>Update/Delete</th>
               </tr>
             </thead>
             <tbody>
@@ -98,6 +119,26 @@ class LoggedIn extends Component {
                   <td>{tender.details}</td>
                   <td>{tender.amount}</td>
                   <td>{tender.status}</td>
+                  <td>
+                    {tender.status === "OPEN" || tender.status === "PENDING" ? (
+                      <>
+                        <Link
+                          to={`/user/update-tender/${tender.id}`}
+                          className="btn btn-info mr-2"
+                        >
+                          <FontAwesomeIcon icon={faEdit} /> Update
+                        </Link>
+                        <button
+                          onClick={() => this.deleteTender(tender.id)}
+                          className="btn btn-danger"
+                        >
+                          <FontAwesomeIcon icon={faTrash} /> Delete
+                        </button>
+                      </>
+                    ) : (
+                      <span>No actions available</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -105,7 +146,7 @@ class LoggedIn extends Component {
         </div>
         <div className="text-center">
           <div className="text-center" style={totalAmountStyle}>
-            <h4 class="total">Total Amount: {this.state.totalAmount}</h4>
+            <h4 className="total">Total Amount: {this.state.totalAmount}</h4>
           </div>
         </div>
         <div className="row">
