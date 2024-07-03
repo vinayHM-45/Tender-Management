@@ -24,31 +24,9 @@ import {
 } from "reactstrap";
 import TenderService from "./TenderService";
 import CustomNavbar from "../components/CustomNavbar";
+
 const SignUp = () => {
   const navigate = useNavigate();
-  const containerStyle = {
-    backgroundColor: "#f8f9fa",
-    padding: "40px 0",
-  };
-
-  const cardStyle = {
-    backgroundColor: "#fff",
-    borderRadius: "10px",
-  };
-
-  const headerStyle = {
-    backgroundColor: "#343a40",
-    color: "#fff",
-    textAlign: "center",
-    marginBottom: "10px",
-  };
-
-  const buttonStyle = {
-    backgroundColor: "#343a40",
-    color: "#fff",
-    marginTop: "20px",
-  };
-
   const [data, setData] = useState({
     name: "",
     email: "",
@@ -71,7 +49,7 @@ const SignUp = () => {
     TenderService.postSignup(data)
       .then((response) => {
         console.log(response);
-        toast.success("Registartion successfull!!");
+        toast.success("Registration successful!");
         navigate("/login");
         setData({
           name: "",
@@ -90,139 +68,147 @@ const SignUp = () => {
   };
 
   return (
-    <div>
+    <div className="bg-light min-vh-100">
       <CustomNavbar />
-      <Container style={containerStyle}>
-        <Row className="mt-2">
-          <Col sm={{ size: 6, offset: 3 }}>
-            <Card style={cardStyle} outline>
-              <CardHeader style={headerStyle}>
-                <h3>Fill Information to Register</h3>
+      <Container className="py-5">
+        <Row className="justify-content-center">
+          <Col md={8} lg={6}>
+            <Card className="shadow-lg border-0">
+              <CardHeader className="bg-primary text-white text-center py-4">
+                <h3 className="mb-0">Sign Up</h3>
               </CardHeader>
-              <CardBody>
+              <CardBody className="p-4">
                 <form onSubmit={submitForm}>
-                  <FormGroup>
-                    <Label for="name">NAME</Label>
+                  <FormGroup className="mb-4">
+                    <Label for="name" className="fw-bold">
+                      Name
+                    </Label>
                     <div className="input-group">
-                      <span className="input-group-prepend">
-                        <span className="input-group-text">
-                          <FontAwesomeIcon icon={faUser} />
-                        </span>
+                      <span className="input-group-text bg-light">
+                        <FontAwesomeIcon icon={faUser} />
                       </span>
                       <Input
                         type="text"
-                        placeholder="Enter Here"
+                        placeholder="Enter your name"
                         id="name"
                         onChange={(e) => handleChange(e, "name")}
                         value={data.name}
                         invalid={
                           error.errors?.response?.data?.name ? true : false
                         }
-                        style={{ marginBottom: "10px" }}
+                        className="form-control-lg"
                       />
-                      <FormFeedback>
-                        {error.errors?.response?.data?.name}
-                      </FormFeedback>
                     </div>
+                    <FormFeedback>
+                      {error.errors?.response?.data?.name}
+                    </FormFeedback>
                   </FormGroup>
 
-                  <FormGroup>
-                    <Label for="email">Email</Label>
+                  <FormGroup className="mb-4">
+                    <Label for="email" className="fw-bold">
+                      Email
+                    </Label>
                     <div className="input-group">
-                      <span className="input-group-prepend">
-                        <span className="input-group-text">
-                          <FontAwesomeIcon icon={faEnvelope} />
-                        </span>
+                      <span className="input-group-text bg-light">
+                        <FontAwesomeIcon icon={faEnvelope} />
                       </span>
                       <Input
-                        type="text"
-                        placeholder="Enter Here"
+                        type="email"
+                        placeholder="Enter your email"
                         id="email"
                         onChange={(e) => handleChange(e, "email")}
                         value={data.email}
                         invalid={
                           error.errors?.response?.data?.email ? true : false
                         }
-                        style={{ marginBottom: "10px" }}
+                        className="form-control-lg"
                       />
-                      <FormFeedback>
-                        {error.errors?.response?.data?.email}
-                      </FormFeedback>
                     </div>
+                    <FormFeedback>
+                      {error.errors?.response?.data?.email}
+                    </FormFeedback>
                   </FormGroup>
 
-                  <FormGroup>
-                    <Label for="address">Address</Label>
+                  <FormGroup className="mb-4">
+                    <Label for="address" className="fw-bold">
+                      Address
+                    </Label>
                     <div className="input-group">
-                      <span className="input-group-prepend">
-                        <span className="input-group-text">
-                          <FontAwesomeIcon icon={faAddressCard} />
-                        </span>
+                      <span className="input-group-text bg-light">
+                        <FontAwesomeIcon icon={faAddressCard} />
                       </span>
                       <Input
                         type="textarea"
-                        placeholder="Enter Here"
+                        placeholder="Enter your address"
                         id="address"
                         onChange={(e) => handleChange(e, "address")}
                         value={data.address}
+                        className="form-control-lg"
+                        rows="3"
                       />
                     </div>
                   </FormGroup>
 
-                  <FormGroup>
-                    <Label for="contact">Mobile Number</Label>
+                  <FormGroup className="mb-4">
+                    <Label for="contact" className="fw-bold">
+                      Mobile Number
+                    </Label>
                     <div className="input-group">
-                      <span className="input-group-prepend">
-                        <span className="input-group-text">
-                          <FontAwesomeIcon icon={faMobile} />
-                        </span>
+                      <span className="input-group-text bg-light">
+                        <FontAwesomeIcon icon={faMobile} />
                       </span>
                       <Input
-                        type="number"
-                        placeholder="Enter Here"
+                        type="tel"
+                        placeholder="Enter your mobile number"
                         id="contact"
                         onChange={(e) => handleChange(e, "contact")}
                         value={data.contact}
                         invalid={
                           error.errors?.response?.data?.contact ? true : false
                         }
-                        style={{ marginBottom: "10px" }}
+                        className="form-control-lg"
                       />
-                      <FormFeedback>
-                        {error.errors?.response?.data?.contact}
-                      </FormFeedback>
                     </div>
+                    <FormFeedback>
+                      {error.errors?.response?.data?.contact}
+                    </FormFeedback>
                   </FormGroup>
 
-                  <FormGroup>
-                    <Label for="password">Enter Password</Label>
+                  <FormGroup className="mb-4">
+                    <Label for="password" className="fw-bold">
+                      Password
+                    </Label>
                     <div className="input-group">
-                      <span className="input-group-prepend">
-                        <span className="input-group-text">
-                          <FontAwesomeIcon icon={faLock} />
-                        </span>
+                      <span className="input-group-text bg-light">
+                        <FontAwesomeIcon icon={faLock} />
                       </span>
                       <Input
                         type="password"
-                        placeholder="Enter Here"
+                        placeholder="Enter your password"
                         id="password"
                         onChange={(e) => handleChange(e, "password")}
                         value={data.password}
                         invalid={
                           error.errors?.response?.data?.password ? true : false
                         }
-                        style={{ marginBottom: "10px" }}
+                        className="form-control-lg"
                       />
-                      <FormFeedback>
-                        {error.errors?.response?.data?.password}
-                      </FormFeedback>
                     </div>
+                    <FormFeedback>
+                      {error.errors?.response?.data?.password}
+                    </FormFeedback>
                   </FormGroup>
-                  <Container>
-                    <Button color="dark" type="submit" style={buttonStyle}>
+
+                  <div className="d-grid">
+                    <Button
+                      color="primary"
+                      size="lg"
+                      type="submit"
+                      className="mt-4"
+                    >
                       Register
                     </Button>
-                  </Container>
+                  </div>
                 </form>
               </CardBody>
             </Card>

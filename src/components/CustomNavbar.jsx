@@ -14,7 +14,16 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Button,
 } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faSignOutAlt,
+  faPlus,
+  faFileAlt,
+  faInfoCircle,
+} from "@fortawesome/free-solid-svg-icons";
 
 function CustomNavbar({ isAdmin }) {
   const navigate = useNavigate();
@@ -41,28 +50,41 @@ function CustomNavbar({ isAdmin }) {
 
   return (
     <div>
-      <Navbar color="dark" dark expand="md" fixed="">
-        <NavbarBrand href="/">Tender Management</NavbarBrand>
+      <Navbar color="dark" dark expand="md" className="py-3 shadow">
+        <NavbarBrand href="/" className="ms-3 fs-4 fw-bold">
+          <FontAwesomeIcon icon={faFileAlt} className="me-2" />
+          Tender Management
+        </NavbarBrand>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="me-auto" navbar>
-            <NavItem>
-              <NavLink tag={ReactLink} to="/login">
-                Login
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink tag={ReactLink} to="/signup">
-                SignUp
-              </NavLink>
-            </NavItem>
+            {!login && (
+              <>
+                <NavItem>
+                  <NavLink tag={ReactLink} to="/login" className="mx-2">
+                    <Button color="outline-light" size="sm">
+                      <FontAwesomeIcon icon={faUser} className="me-2" />
+                      Login
+                    </Button>
+                  </NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink tag={ReactLink} to="/signup" className="mx-2">
+                    <Button color="outline-light" size="sm">
+                      <FontAwesomeIcon icon={faUser} className="me-2" />
+                      SignUp
+                    </Button>
+                  </NavLink>
+                </NavItem>
+              </>
+            )}
             <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
+              <DropdownToggle nav caret className="text-light">
                 More
               </DropdownToggle>
               <DropdownMenu end>
                 <DropdownItem>Services</DropdownItem>
-                <DropdownItem>Contact US</DropdownItem>
+                <DropdownItem>Contact Us</DropdownItem>
                 <DropdownItem divider />
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -72,29 +94,48 @@ function CustomNavbar({ isAdmin }) {
               <>
                 {!isAdmin && (
                   <NavItem>
-                    <NavLink tag={ReactLink} to="/user/tender">
-                      Apply tenders
+                    <NavLink
+                      tag={ReactLink}
+                      to="/user/tender"
+                      className="text-light"
+                    >
+                      <FontAwesomeIcon icon={faFileAlt} className="me-2" />
+                      Apply Tenders
                     </NavLink>
                   </NavItem>
                 )}
                 {isAdmin && (
                   <NavItem>
-                    <NavLink tag={ReactLink} to="/user/tenders">
-                      ADD TENDERS
+                    <NavLink
+                      tag={ReactLink}
+                      to="/user/tenders"
+                      className="text-light"
+                    >
+                      <FontAwesomeIcon icon={faPlus} className="me-2" />
+                      Add Tenders
                     </NavLink>
                   </NavItem>
                 )}
-                <NavItem>
-                  <NavLink>{user.email}</NavLink>
-                </NavItem>
-                <NavItem>
-                  <NavLink onClick={Logout}>Logout</NavLink>
-                </NavItem>
+                <UncontrolledDropdown nav inNavbar>
+                  <DropdownToggle nav caret className="text-light">
+                    <FontAwesomeIcon icon={faUser} className="me-2" />
+                    {user.email}
+                  </DropdownToggle>
+                  <DropdownMenu end>
+                    <DropdownItem onClick={Logout}>
+                      <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                      Logout
+                    </DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
               </>
             )}
             {!login && (
               <NavItem>
-                <NavLink tag={ReactLink}>About us</NavLink>
+                <NavLink tag={ReactLink} className="text-light">
+                  <FontAwesomeIcon icon={faInfoCircle} className="me-2" />
+                  About Us
+                </NavLink>
               </NavItem>
             )}
           </Nav>

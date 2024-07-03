@@ -16,6 +16,13 @@ import {
   Col,
   FormFeedback,
 } from "reactstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faInfoCircle,
+  faDollarSign,
+  faCalendarAlt,
+} from "@fortawesome/free-solid-svg-icons";
 
 const AdminPage = () => {
   const navigate = useNavigate();
@@ -66,7 +73,7 @@ const AdminPage = () => {
       TenderService.postTendersCreate(updatedTenderDetails)
         .then((response) => {
           console.log(response);
-          navigate("/user/tender");
+          navigate("/user/admin");
           setTenderDetails({
             name: "",
             details: "",
@@ -119,70 +126,114 @@ const AdminPage = () => {
   const userIsAdmin = isAdmin();
 
   return (
-    <div>
+    <div className="bg-light min-vh-100">
       <CustomNavbar isAdmin={isAdmin} />
-      <Container>
-        <Row className="mt-2">
-          <Col sm={{ size: 6, offset: 3 }}>
-            <Card color="dark" outline>
-              <CardHeader>
-                <h3>ENTER DETAILS</h3>
+      <Container className="py-5">
+        <Row className="justify-content-center">
+          <Col md={8} lg={6}>
+            <Card className="shadow-lg border-0">
+              <CardHeader className="bg-primary text-white">
+                <h3 className="mb-0">Enter Tender Details</h3>
               </CardHeader>
-              <CardBody>
+              <CardBody className="p-4">
                 <form onSubmit={handleFormSubmit}>
-                  <FormGroup>
-                    <Label for="name">Name</Label>
-                    <Input
-                      type="text"
-                      placeholder="Enter Name"
-                      id="name"
-                      value={tenderDetails.name}
-                      onChange={(e) => handleChange(e, "name")}
-                      invalid={error.name !== ""}
-                    />
+                  <FormGroup className="mb-4">
+                    <Label for="name" className="fw-bold">
+                      Name
+                    </Label>
+                    <div className="input-group">
+                      <span className="input-group-text bg-light">
+                        <FontAwesomeIcon icon={faUser} />
+                      </span>
+                      <Input
+                        type="text"
+                        placeholder="Enter Name"
+                        id="name"
+                        value={tenderDetails.name}
+                        onChange={(e) => handleChange(e, "name")}
+                        invalid={error.name !== ""}
+                        className="form-control-lg"
+                      />
+                    </div>
                     <FormFeedback>{error.name}</FormFeedback>
                   </FormGroup>
-                  <FormGroup>
-                    <Label for="details">Details</Label>
-                    <Input
-                      type="textarea"
-                      placeholder="Enter Details"
-                      id="details"
-                      value={tenderDetails.details}
-                      onChange={(e) => handleChange(e, "details")}
-                      invalid={error.details !== ""}
-                    />
+                  <FormGroup className="mb-4">
+                    <Label for="details" className="fw-bold">
+                      Details
+                    </Label>
+                    <div className="input-group">
+                      <span className="input-group-text bg-light">
+                        <FontAwesomeIcon icon={faInfoCircle} />
+                      </span>
+                      <Input
+                        type="textarea"
+                        placeholder="Enter Details"
+                        id="details"
+                        value={tenderDetails.details}
+                        onChange={(e) => handleChange(e, "details")}
+                        invalid={error.details !== ""}
+                        className="form-control-lg"
+                        rows="4"
+                      />
+                    </div>
                     <FormFeedback>{error.details}</FormFeedback>
                   </FormGroup>
-                  <FormGroup>
-                    <Label for="amount">Amount</Label>
-                    <Input
-                      type="number"
-                      placeholder="Enter Amount"
-                      id="amount"
-                      value={tenderDetails.amount}
-                      onChange={(e) => handleChange(e, "amount")}
-                      invalid={error.amount !== ""}
-                    />
-                    <FormFeedback>{error.amount}</FormFeedback>
-                  </FormGroup>
-                  <FormGroup>
-                    <Label for="endsOn">Expires By</Label>
-                    <Input
-                      type="date"
-                      placeholder="Enter Date"
-                      id="endsOn"
-                      value={tenderDetails.endsOn}
-                      onChange={(e) => handleChange(e, "endsOn")}
-                      invalid={error.endsOn !== ""}
-                    />
-                    <FormFeedback>{error.endsOn}</FormFeedback>
-                  </FormGroup>
-                  <Container>
-                    <Button color="dark" type="submit">
-                      Apply
+                  <Row>
+                    <Col md={6}>
+                      <FormGroup className="mb-4">
+                        <Label for="amount" className="fw-bold">
+                          Amount
+                        </Label>
+                        <div className="input-group">
+                          <span className="input-group-text bg-light">
+                            <FontAwesomeIcon icon={faDollarSign} />
+                          </span>
+                          <Input
+                            type="number"
+                            placeholder="Enter Amount"
+                            id="amount"
+                            value={tenderDetails.amount}
+                            onChange={(e) => handleChange(e, "amount")}
+                            invalid={error.amount !== ""}
+                            className="form-control-lg"
+                          />
+                        </div>
+                        <FormFeedback>{error.amount}</FormFeedback>
+                      </FormGroup>
+                    </Col>
+                    <Col md={6}>
+                      <FormGroup className="mb-4">
+                        <Label for="endsOn" className="fw-bold">
+                          Expires By
+                        </Label>
+                        <div className="input-group">
+                          <span className="input-group-text bg-light">
+                            <FontAwesomeIcon icon={faCalendarAlt} />
+                          </span>
+                          <Input
+                            type="date"
+                            placeholder="Enter Date"
+                            id="endsOn"
+                            value={tenderDetails.endsOn}
+                            onChange={(e) => handleChange(e, "endsOn")}
+                            invalid={error.endsOn !== ""}
+                            className="form-control-lg"
+                          />
+                        </div>
+                        <FormFeedback>{error.endsOn}</FormFeedback>
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <div className="d-grid">
+                    <Button
+                      color="primary"
+                      size="lg"
+                      type="submit"
+                      className="mt-4"
+                    >
+                      Submit Tender
                     </Button>
-                  </Container>
+                  </div>
                 </form>
               </CardBody>
             </Card>

@@ -12,6 +12,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import UpdateTender from "./components/UpdateTender";
 import TenderApply from "./services/TenderApply";
 import Home from "./components/Home";
+import AdminDashboard from "./components/AdminDashboard";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
             element={<TenderApply />}
           />
           <Route path="update-tender/:id" exact element={<UpdateTender />} />
+          <Route path="/user/admin" exact element={<AdminDashboard />} />
         </Route>
       </Routes>
     </BrowserRouter>

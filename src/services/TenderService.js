@@ -63,6 +63,17 @@ class TenderService {
   deleteAppliedTender(tenderId) {
     return axios.delete(`${TENDERS4_API_BASE_URL}/${tenderId}`);
   }
+  updateTender(tenderId, tender) {
+    return axios.put(`${TENDERS_API_BASE_URL}/${tenderId}`, tender, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
+  deleteTender(tenderId) {
+    return axios.delete(`${TENDERS_API_BASE_URL}/${tenderId}`);
+  }
 }
 
 export default new TenderService();

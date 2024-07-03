@@ -13,13 +13,14 @@ import {
   Label,
   Row,
   Col,
+  FormFeedback,
 } from "reactstrap";
 import TenderService from "./TenderService";
-import { getCurrentUserDetail } from "../storage"; // Import the auth utility
+import { getCurrentUserDetail } from "../storage";
 
 const TenderApply = () => {
   const navigate = useNavigate();
-  const { tenderId } = useParams(); // Assuming you're passing tenderId in the URL
+  const { tenderId } = useParams();
 
   const [tenderDetails, setTenderDetails] = useState({
     email: "",
@@ -28,13 +29,16 @@ const TenderApply = () => {
     userId: "",
     tenderId: "",
   });
+
   const [error, setError] = useState({
-    errors: {},
-    isError: false,
+    email: "",
+    details: "",
+    amount: "",
+    userId: "",
+    tenderId: "",
   });
 
   useEffect(() => {
-    // Populate the fields when the component mounts
     const currentUser = getCurrentUserDetail();
     if (currentUser) {
       setTenderDetails((prevState) => ({
@@ -46,13 +50,58 @@ const TenderApply = () => {
     }
   }, [tenderId]);
 
-  const handleChange = (e, field) => {
-    const actualValue = e.target.value;
-    setTenderDetails({ ...tenderDetails, [field]: actualValue });
+  const validateField = (name, value) => {
+    let errorMsg = "";
+    switch (name) {
+      case "email":
+        if (!value) errorMsg = "Email is required";
+        else if (!/\S+@\S+\.\S+/.test(value)) errorMsg = "Email is invalid";
+        break;
+      case "details":
+        if (!value) errorMsg = "Details are required";
+        break;
+      case "amount":
+        if (!value) errorMsg = "Amount is required";
+        else if (isNaN(value) || Number(value) <= 0)
+          errorMsg = "Amount must be a positive number";
+        break;
+      case "userId":
+        if (!value) errorMsg = "User ID is required";
+        break;
+      case "tenderId":
+        if (!value) errorMsg = "Tender ID is required";
+        break;
+      default:
+        break;
+    }
+    return errorMsg;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    const errorMsg = validateField(name, value);
+    setError((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
+    setTenderDetails((prevDetails) => ({ ...prevDetails, [name]: value }));
+  };
+
+  const isFormValid = () => {
+    const newErrors = {};
+    let isValid = true;
+    Object.keys(tenderDetails).forEach((key) => {
+      const errorMsg = validateField(key, tenderDetails[key]);
+      newErrors[key] = errorMsg;
+      if (errorMsg) isValid = false;
+    });
+    setError(newErrors);
+    return isValid;
   };
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
+    if (!isFormValid()) {
+      toast.error("Please fill all required fields correctly.");
+      return;
+    }
 
     const payload = {
       ...tenderDetails,
@@ -78,15 +127,11 @@ const TenderApply = () => {
           "Error applying for tender:",
           error.response?.data || error.message
         );
-        if (error.response.status == 409) {
-          toast.error("You have alredy applied for this Tender");
+        if (error.response?.status === 409) {
+          toast.error("You have already applied for this Tender");
         } else {
           toast.error("Failed to apply for tender. Please try again.");
         }
-        setError({
-          errors: error.response?.data || {},
-          isError: true,
-        });
       });
   };
 
@@ -106,54 +151,64 @@ const TenderApply = () => {
                     <Label for="email">Email</Label>
                     <Input
                       type="text"
-                      placeholder="Enter Here"
+                      name="email"
                       id="email"
                       value={tenderDetails.email}
-                      onChange={(e) => handleChange(e, "email")}
-                      readOnly // Make it read-only since it's auto-populated
+                      onChange={handleChange}
+                      invalid={!!error.email}
+                      readOnly
                     />
+                    <FormFeedback>{error.email}</FormFeedback>
                   </FormGroup>
                   <FormGroup>
                     <Label for="details">Details</Label>
                     <Input
                       type="textarea"
-                      placeholder="Enter Here"
+                      name="details"
                       id="details"
                       value={tenderDetails.details}
-                      onChange={(e) => handleChange(e, "details")}
+                      onChange={handleChange}
+                      invalid={!!error.details}
                     />
+                    <FormFeedback>{error.details}</FormFeedback>
                   </FormGroup>
                   <FormGroup>
                     <Label for="amount">Amount</Label>
                     <Input
                       type="number"
-                      placeholder="Enter Here"
+                      name="amount"
                       id="amount"
                       value={tenderDetails.amount}
-                      onChange={(e) => handleChange(e, "amount")}
+                      onChange={handleChange}
+                      invalid={!!error.amount}
                     />
+                    <FormFeedback>{error.amount}</FormFeedback>
                   </FormGroup>
                   <FormGroup>
                     <Label for="userId">User ID</Label>
                     <Input
                       type="number"
-                      placeholder="Enter User ID"
+                      name="userId"
                       id="userId"
                       value={tenderDetails.userId}
-                      onChange={(e) => handleChange(e, "userId")}
-                      readOnly // Make it read-only since it's auto-populated
+                      onChange={handleChange}
+                      invalid={!!error.userId}
+                      readOnly
                     />
+                    <FormFeedback>{error.userId}</FormFeedback>
                   </FormGroup>
                   <FormGroup>
                     <Label for="tenderId">Tender ID</Label>
                     <Input
                       type="number"
-                      placeholder="Enter Tender ID"
+                      name="tenderId"
                       id="tenderId"
                       value={tenderDetails.tenderId}
-                      onChange={(e) => handleChange(e, "tenderId")}
-                      readOnly // Make it read-only since it's auto-populated
+                      onChange={handleChange}
+                      invalid={!!error.tenderId}
+                      readOnly
                     />
+                    <FormFeedback>{error.tenderId}</FormFeedback>
                   </FormGroup>
                   <Container>
                     <Button color="dark" type="submit">
