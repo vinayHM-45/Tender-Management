@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const TENDERS_API_BASE_URL = "https://tender.vinayhm.tech/api/v1/tender";
-const TENDERS2_API_BASE_URL = "https://tender.vinayhm.tech/api/v1/signup";
-const TENDERS3_API_BASE_URL = "https://tender.vinayhm.tech/api/v1/login";
+const TENDERS_API_BASE_URL = "https://apitender.vinayhm.tech/api/v1/tender";
+const TENDERS2_API_BASE_URL = "https://apitender.vinayhm.tech/api/v1/signup";
+const TENDERS3_API_BASE_URL = "https://apitender.vinayhm.tech/api/v1/login";
 const TENDERS4_API_BASE_URL =
-  "https://tender.vinayhm.tech/api/v1/appliedtenders";
+  "https://apitender.vinayhm.tech/api/v1/appliedtenders";
 const TENDERS5_API_BASE_URL =
-  "https://tender.vinayhm.tech/api/v1/appliedtenders/user/admin/getapplicants";
+  "https://apitender.vinayhm.tech/api/v1/appliedtenders/user/admin/getapplicants";
 
 class TenderService {
   getTenders() {
