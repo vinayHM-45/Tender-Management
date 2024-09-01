@@ -50,7 +50,7 @@ const Login = () => {
         if (token && user) {
           doLogin(user, () => {
             if (user.email === "admin@gmail") {
-              navigate("/user/tenders");
+              navigate("/user/admin");
             } else {
               navigate("/user/dashboard");
             }

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
-  Card,
-  CardBody,
-  CardHeader,
   Container,
   Row,
   Col,
+  Card,
+  CardHeader,
+  CardBody,
   Table,
   Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
   Form,
   FormGroup,
   Label,
@@ -19,14 +18,17 @@ import {
   Alert,
 } from "reactstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faTrash, faUsers } from "@fortawesome/free-solid-svg-icons";
 import TenderService from "../services/TenderService";
 import CustomNavbar from "./CustomNavbar";
+
 const AdminDashboard = () => {
   const [tenders, setTenders] = useState([]);
   const [stats, setStats] = useState({ live: 0, closed: 0 });
   const [modal, setModal] = useState(false);
+  const [applicantsModal, setApplicantsModal] = useState(false);
   const [currentTender, setCurrentTender] = useState({});
+  const [currentApplicants, setCurrentApplicants] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -48,13 +50,14 @@ const AdminDashboard = () => {
   const calculateStats = (tenderData) => {
     const now = new Date();
     const live = tenderData.filter(
-      (tender) => new Date(tender.endsOn) > now
+      (tender) => new Date(tender.endsOn) > now && !tender.awardedTo
     ).length;
     const closed = tenderData.length - live;
     setStats({ live, closed });
   };
 
   const toggleModal = () => setModal(!modal);
+  const toggleApplicantsModal = () => setApplicantsModal(!applicantsModal);
 
   const handleUpdate = (tender) => {
     setCurrentTender(tender);
@@ -67,7 +70,7 @@ const AdminDashboard = () => {
       await TenderService.updateTender(currentTender.id, currentTender);
       toggleModal();
       setSuccessMessage("Tender updated successfully");
-      fetchTenders(); // Refresh the list after update
+      fetchTenders();
     } catch (error) {
       console.error("Error updating tender:", error);
       setErrorMessage("Failed to update tender. Please try again.");
@@ -78,7 +81,7 @@ const AdminDashboard = () => {
     try {
       await TenderService.deleteTender(id);
       setSuccessMessage("Tender deleted successfully");
-      fetchTenders(); // Refresh the list after deletion
+      fetchTenders();
     } catch (error) {
       console.error("Error deleting tender:", error);
       setErrorMessage(
@@ -90,6 +93,17 @@ const AdminDashboard = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentTender((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const showApplicants = async (tenderId) => {
+    try {
+      const response = await TenderService.getTenderApplicants(tenderId);
+      setCurrentApplicants(response.data);
+      toggleApplicantsModal();
+    } catch (error) {
+      console.error("Error fetching applicants:", error);
+      setErrorMessage("Failed to fetch applicants. Please try again.");
+    }
   };
 
   const clearMessages = () => {
@@ -111,6 +125,7 @@ const AdminDashboard = () => {
             {successMessage}
           </Alert>
         )}
+
         <Row>
           <Col md={6}>
             <Card className="mb-4">
@@ -130,6 +145,7 @@ const AdminDashboard = () => {
             </Card>
           </Col>
         </Row>
+
         <Card>
           <CardHeader className="bg-primary text-white">
             <h3>All Tenders</h3>
@@ -141,6 +157,8 @@ const AdminDashboard = () => {
                   <th>Name</th>
                   <th>Amount</th>
                   <th>Expires On</th>
+                  <th>Status</th>
+                  <th>Awarded To</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -150,6 +168,12 @@ const AdminDashboard = () => {
                     <td>{tender.name}</td>
                     <td>${tender.amount}</td>
                     <td>{new Date(tender.endsOn).toLocaleDateString()}</td>
+                    <td>
+                      {new Date(tender.endsOn) > new Date() && !tender.awardedTo
+                        ? "Live"
+                        : "Closed"}
+                    </td>
+                    <td>{tender.awardedTo || "Not awarded yet"}</td>
                     <td>
                       <Button
                         color="info"
@@ -162,9 +186,17 @@ const AdminDashboard = () => {
                       <Button
                         color="danger"
                         size="sm"
+                        className="mr-2"
                         onClick={() => handleDelete(tender.id)}
                       >
                         <FontAwesomeIcon icon={faTrash} /> Delete
+                      </Button>
+                      <Button
+                        color="primary"
+                        size="sm"
+                        onClick={() => showApplicants(tender.id)}
+                      >
+                        <FontAwesomeIcon icon={faUsers} /> Applicants
                       </Button>
                     </td>
                   </tr>
@@ -212,10 +244,62 @@ const AdminDashboard = () => {
                   onChange={handleInputChange}
                 />
               </FormGroup>
+              <FormGroup>
+                <Label for="awardedTo">Awarded To</Label>
+                <Input
+                  type="text"
+                  name="awardedTo"
+                  id="awardedTo"
+                  value={currentTender.awardedTo || ""}
+                  onChange={handleInputChange}
+                />
+              </FormGroup>
               <Button color="primary" type="submit">
                 Update Tender
               </Button>
             </Form>
+          </ModalBody>
+        </Modal>
+
+        <Modal
+          isOpen={applicantsModal}
+          toggle={toggleApplicantsModal}
+          size="lg"
+        >
+          <ModalHeader toggle={toggleApplicantsModal}>
+            Tender Applicants
+          </ModalHeader>
+          <ModalBody>
+            {currentApplicants.length > 0 ? (
+              <Table responsive>
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Details</th>
+                    <th>Amount</th>
+                    <th>User ID</th>
+                    <th>Status</th>
+                    <th>Revoked</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentApplicants.map((applicant) => (
+                    <tr key={applicant.id}>
+                      <td>{applicant.id}</td>
+                      <td>{applicant.email}</td>
+                      <td>{applicant.details}</td>
+                      <td>${applicant.amount.toFixed(2)}</td>
+                      <td>{applicant.userId}</td>
+                      <td>{applicant.status}</td>
+                      <td>{applicant.revoked ? "Yes" : "No"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            ) : (
+              <p>No applicants for this tender yet.</p>
+            )}
           </ModalBody>
         </Modal>
       </Container>
